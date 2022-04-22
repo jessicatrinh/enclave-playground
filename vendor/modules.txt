@@ -1,0 +1,12 @@
+# github.com/fxamacker/cbor/v2 v2.2.0
+## explicit; go 1.12
+github.com/fxamacker/cbor/v2
+# github.com/jessicatrinh/nsm v0.0.0-20220422171304-7934ac0a50f2
+## explicit; go 1.15
+github.com/jessicatrinh/nsm
+github.com/jessicatrinh/nsm/ioc
+github.com/jessicatrinh/nsm/request
+github.com/jessicatrinh/nsm/response
+# github.com/x448/float16 v0.8.4
+## explicit; go 1.11
+github.com/x448/float16
