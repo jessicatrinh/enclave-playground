@@ -11,6 +11,7 @@ import (
 	"io"
 	"math/big"
 	"os"
+	"time"
 
 	"github.com/jessicatrinh/nsm"
 	"github.com/jessicatrinh/nsm/request"
@@ -86,4 +87,8 @@ func main() {
 	// Retrieve attestation document
 	att, err := attest(StreamToByte(random), userData, xpub.([]byte))
 	fmt.Printf("attestation %v %v\n", base64.StdEncoding.EncodeToString(att), err)
+	for {
+		time.Sleep(1 * time.Second)
+		fmt.Println("Running attest")
+	}
 }

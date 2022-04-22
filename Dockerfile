@@ -3,6 +3,6 @@
 
 FROM busybox
 
-COPY helloWorld /bin/helloWorld
+COPY attest /bin/attest
 
-CMD ["/bin/helloWorld"]
+CMD ["/bin/attest"]
