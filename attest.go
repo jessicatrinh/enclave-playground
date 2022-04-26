@@ -84,14 +84,6 @@ func createFile() *os.File {
 	// check if file exists
 	var _, err = os.Stat(path)
 
-	// delete file
-	//if os.IsExist(err) {
-	//	var err = os.Remove(path)
-	//	if isError(err) {
-	//		return
-	//	}
-	//}
-
 	// create file if not exists
 	if os.IsNotExist(err) {
 		var file, err = os.Create(path)
@@ -132,7 +124,12 @@ func getRand(file *os.File) *bytes.Reader {
 	if err != nil {
 		writeFile(file, err)
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
+		// TESTING: Prevent main from exiting, even when there is an error in generateBigPrime function
+		for {
+			fmt.Println("Running attest")
+			time.Sleep(3 * time.Second)
+		}
+		//os.Exit(1)
 	}
 	return bytes.NewReader(randomInt.Bytes())
 	// return rand.Reader // Uncomment for TEST
@@ -161,6 +158,12 @@ func getDoc(file *os.File, random *bytes.Reader, userData []byte, xpubBytes []by
 	// Save to file any error returned by attest from nsm interface library
 	if err != nil {
 		writeFile(file, err)
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		// TESTING: Prevent main from exiting, even when there is an error in attest function
+		for {
+			fmt.Println("Running attest")
+			time.Sleep(3 * time.Second)
+		}
 	}
 	fmt.Printf("attestation %v %v\n", base64.StdEncoding.EncodeToString(att), err)
 }
@@ -179,3 +182,15 @@ func main() {
 		time.Sleep(3 * time.Second)
 	}
 }
+
+// TESTING:
+
+//func main() {
+//	file := createFile()
+//	err1 := errors.New("log test error 1")
+//	writeFile(file, err1)
+//	err2 := errors.New("log test error 2")
+//	writeFile(file, err2)
+//	defer file.Close()
+//	fmt.Println("Test main finished gracefully.")
+//}
