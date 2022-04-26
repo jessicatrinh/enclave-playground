@@ -1,5 +1,7 @@
 github.com/fxamacker/cbor/v2 v2.2.0 h1:6eXqdDDe588rSYAi1HfZKbx6YYQO4mxQ9eC6xYpU/JQ=
 github.com/fxamacker/cbor/v2 v2.2.0/go.mod h1:TA1xS00nchWmaBnEIxPSE5oHLuJBAVvqrtAnWBwBCVo=
+github.com/hf/nitrite v0.0.0-20211104000856-f9e0dcc73703 h1:oTi0zYvHo1sfk5sevGc4LrfgpLYB6cIhP/HllCUGcZ8=
+github.com/hf/nitrite v0.0.0-20211104000856-f9e0dcc73703/go.mod h1:ycRhVmo6wegyEl6WN+zXOHUTJvB0J2tiuH88q/McTK8=
 github.com/jessicatrinh/nsm v0.0.0-20220422171304-7934ac0a50f2 h1:JhgDUjAbZLPPahNmqnuQnyGYIvtsmchQ+7SPtsTTibE=
 github.com/jessicatrinh/nsm v0.0.0-20220422171304-7934ac0a50f2/go.mod h1:+FC3fc8U8oosL4r/vRJT5ohC9e0k/jHZvVy3s2R/QE8=
 github.com/x448/float16 v0.8.4 h1:qLwI1I70+NjRFUR3zs1JPUCgaCXSh3SW62uAKT1mSBM=
