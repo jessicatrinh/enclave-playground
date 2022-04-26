@@ -105,13 +105,16 @@ func writeFile(file *os.File, myErr error) {
 	// Write some text line-by-line to file
 	_, err := file.WriteString(myErr.Error() + "\n")
 	if isError(err) {
+		fmt.Fprintf(os.Stderr, "error from WriteString(): %v\n", err)
 		return
 	}
 	// Save file changes
 	err = file.Sync()
 	if isError(err) {
+		fmt.Fprintf(os.Stderr, "error from Sync(): %v\n", err)
 		return
 	}
+	fmt.Println("Wrote error to", path)	// LOGGING
 }
 
 // Pull out into sub-functions:
