@@ -2,8 +2,8 @@ package main
 
 import (
 	"crypto/rand"
-	//"crypto/ecdsa"
-	//"crypto/elliptic"
+	"crypto/ecdsa"
+	"crypto/elliptic"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -68,10 +68,12 @@ func getXpub() ([]byte, error) {
 	if nil != err {
 		return nil, err
 	}
-	return nil, nil
 	// Generate a keypair with ECC
-	//curve := elliptic.P256()
-	//xprv, err := ecdsa.GenerateKey(curve, sess)
+	curve := elliptic.P256()
+	xprv, err := ecdsa.GenerateKey(curve, sess)
+	fmt.Println("xprv", xprv)
+	return nil, nil
+
 	//if err != nil {
 	//	return nil, err
 	//}
