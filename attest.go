@@ -123,7 +123,7 @@ func getRand(file *os.File) *bytes.Reader {
 	// Save to file any error returned by generateBigPrime from nsm interface library
 	if err != nil {
 		writeFile(file, err)
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error from generateBigPrime(): %v\n", err)
 		// TESTING: Prevent main from exiting, even when there is an error in generateBigPrime function
 		for {
 			fmt.Println("Running attest")
@@ -144,7 +144,7 @@ func getXpub(file *os.File, random *bytes.Reader) []byte {
 	// Save to file any error returned by GenerateKey from ecdsa library
 	if err != nil {
 		writeFile(file, err)
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error from GenerateKey(): %v\n", err)
 		os.Exit(1)
 	}
 	xpub := xprv.Public()
@@ -158,7 +158,7 @@ func getDoc(file *os.File, random *bytes.Reader, userData []byte, xpubBytes []by
 	// Save to file any error returned by attest from nsm interface library
 	if err != nil {
 		writeFile(file, err)
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error from attest(): %v\n", err)
 		// TESTING: Prevent main from exiting, even when there is an error in attest function
 		for {
 			fmt.Println("Running attest")
