@@ -3,31 +3,20 @@ package main
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"crypto/rand"
 	"encoding/base64"
 	"errors"
 	"fmt"
 	"github.com/jessicatrinh/nsm"
 	"github.com/jessicatrinh/nsm/request"
-	"math/big"
 	"time"
 )
 
 func main() {
 	for {
-		fmt.Println("Creating prime")
-		prime, err := genPrime()
-		logIfError(err)
-		if prime != nil {
-			fmt.Printf("created prime: %v\n", prime.String())
-		}
-
 		fmt.Println("Creating keypair")
 		xpub, err := getXpub()
 		logIfError(err)
-
 		userData := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} // sample userData
-
 		fmt.Println("Generating attestation doc")
 		doc, err := attest([]byte{0, 1, 2, 3, 4, 5, 6, 7}, userData, xpub)
 		logIfError(err)
@@ -37,19 +26,9 @@ func main() {
 	}
 }
 
-// genPrime reads entropy from Nitro Secure Module
-func genPrime() (*big.Int, error) {
-	sess, err := nsm.OpenDefaultSession()
-	defer sess.Close()
-	if nil != err {
-		return nil, err
-	}
-	return rand.Prime(sess, 2048)
-}
-
 // getXpub generates a keypair and return its public key as a byte array
 func getXpub() ([]byte, error) {
-	// get sess
+	// Read entropy from Nitro Secure Module
 	sess, err := nsm.OpenDefaultSession()
 	defer sess.Close()
 	if nil != err {
