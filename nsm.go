@@ -25,9 +25,9 @@ func main() {
 		}
 
 		fmt.Println("Creating keypair")
-		//xpub, err := getXpub()
+		xpub, err := getXpub()
 		//logIfError(err)
-		xpub := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} 	// sample xpub
+		xpub = []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} 	// sample xpub
 
 		userData := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} 	// sample userData
 
@@ -68,14 +68,15 @@ func getXpub() ([]byte, error) {
 	if nil != err {
 		return nil, err
 	}
+	return nil, nil
 	// Generate a keypair with ECC
-	curve := elliptic.P256()
-	xprv, err := ecdsa.GenerateKey(curve, sess)
-	if err != nil {
-		return nil, err
-	}
-	xpub := xprv.Public()
-	return xpub.([]byte), nil
+	//curve := elliptic.P256()
+	//xprv, err := ecdsa.GenerateKey(curve, sess)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//xpub := xprv.Public()
+	//return xpub.([]byte), nil
 }
 
 // attest obtain an attestation document from Nitro Hypervisor (https://github.com/hf/nsm)
