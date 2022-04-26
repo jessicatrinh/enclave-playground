@@ -2,8 +2,8 @@ package main
 
 import (
 	"crypto/rand"
-	"crypto/ecdsa"
-	"crypto/elliptic"
+	//"crypto/ecdsa"
+	//"crypto/elliptic"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -26,8 +26,8 @@ func main() {
 
 		fmt.Println("Creating keypair")
 		xpub, err := getXpub()
-		//logIfError(err)
-		xpub = []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} 	// sample xpub
+		logIfError(err)
+		// xpub = []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} 	// sample xpub
 
 		userData := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} 	// sample userData
 
