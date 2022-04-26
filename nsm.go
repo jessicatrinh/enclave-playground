@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
@@ -10,7 +9,6 @@ import (
 	"fmt"
 	"github.com/jessicatrinh/nsm"
 	"github.com/jessicatrinh/nsm/request"
-	"io"
 	"math/big"
 	"time"
 )
@@ -27,7 +25,6 @@ func main() {
 		fmt.Println("Creating keypair")
 		xpub, err := getXpub()
 		logIfError(err)
-		// xpub = []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} 	// sample xpub
 
 		userData := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} // sample userData
 
@@ -40,22 +37,14 @@ func main() {
 	}
 }
 
-// genPrime reads entropy from Nitro Secure Module (https://github.com/hf/nsm)
+// genPrime reads entropy from Nitro Secure Module
 func genPrime() (*big.Int, error) {
 	sess, err := nsm.OpenDefaultSession()
 	defer sess.Close()
-
 	if nil != err {
 		return nil, err
 	}
-
 	return rand.Prime(sess, 2048)
-}
-
-func StreamToByte(stream io.Reader) []byte {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(stream)
-	return buf.Bytes()
 }
 
 // getXpub generates a keypair and return its public key as a byte array
@@ -63,36 +52,25 @@ func getXpub() ([]byte, error) {
 	// get sess
 	sess, err := nsm.OpenDefaultSession()
 	defer sess.Close()
-
 	if nil != err {
 		return nil, err
 	}
 	// Generate a keypair with ECC
 	curve := elliptic.P256()
 	xprv, err := ecdsa.GenerateKey(curve, sess)
-	fmt.Println("xprv", xprv)
 	if err != nil {
 		return nil, err
 	}
-	xpub := xprv.Public()
-	fmt.Println("xpub", xpub)
-	xpubBytes := elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y)
-	//xpubBytes := xpub.([]byte)
-	fmt.Println("xpubBytes", xpubBytes)
-
-	return xpubBytes, nil
-	//return nil, nil
+	return elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y), nil
 }
 
-// attest obtain an attestation document from Nitro Hypervisor (https://github.com/hf/nsm)
+// attest obtain an attestation document from Nitro Hypervisor
 func attest(nonce, userData, publicKey []byte) ([]byte, error) {
 	sess, err := nsm.OpenDefaultSession()
 	defer sess.Close()
-
 	if nil != err {
 		return nil, err
 	}
-
 	res, err := sess.Send(&request.Attestation{
 		Nonce:     nonce,
 		UserData:  userData,
@@ -101,15 +79,12 @@ func attest(nonce, userData, publicKey []byte) ([]byte, error) {
 	if nil != err {
 		return nil, err
 	}
-
 	if "" != res.Error {
 		return nil, errors.New(string(res.Error))
 	}
-
 	if nil == res.Attestation || nil == res.Attestation.Document {
 		return nil, errors.New("NSM device did not return an attestation")
 	}
-
 	return res.Attestation.Document, nil
 }
 
