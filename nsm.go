@@ -25,8 +25,9 @@ func main() {
 		}
 
 		fmt.Println("Creating keypair")
-		xpub, err := getXpub()
-		logIfError(err)
+		//xpub, err := getXpub()
+		//logIfError(err)
+		xpub := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} 	// sample xpub
 
 		userData := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} 	// sample userData
 
