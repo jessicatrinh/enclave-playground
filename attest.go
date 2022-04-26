@@ -19,6 +19,20 @@ import (
 
 var path = "errors.txt"
 
+// MAIN:
+
+func main() {
+	file := createFile()
+	random := getRand(file)
+	xpubBytes := getXpub(file, random)
+	userData := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+	getDoc(file, random, userData, xpubBytes)
+	defer file.Close()
+	for {
+		fmt.Println("Running attest")
+		time.Sleep(3 * time.Second)
+	}
+}
 
 // generateBigPrime reads entropy from Nitro Secure Module (https://github.com/hf/nsm)
 func generateBigPrime() (*big.Int, error) {
@@ -114,7 +128,7 @@ func writeFile(file *os.File, myErr error) {
 		fmt.Fprintf(os.Stderr, "error from Sync(): %v\n", err)
 		return
 	}
-	fmt.Println("Wrote error to", path)	// LOGGING
+	fmt.Println("Wrote error to", path) // LOGGING
 }
 
 // Pull out into sub-functions:
@@ -154,7 +168,6 @@ func getXpub(file *os.File, random *bytes.Reader) []byte {
 	return xpub.([]byte)
 }
 
-
 // getAttest retrieves the attestation document, or writes the error to a file
 func getDoc(file *os.File, random *bytes.Reader, userData []byte, xpubBytes []byte) {
 	att, err := attest(StreamToByte(random), userData, xpubBytes)
@@ -169,21 +182,6 @@ func getDoc(file *os.File, random *bytes.Reader, userData []byte, xpubBytes []by
 		}
 	}
 	fmt.Printf("attestation %v %v\n", base64.StdEncoding.EncodeToString(att), err)
-}
-
-// MAIN:
-
-func main() {
-	file := createFile()
-	random := getRand(file)
-	xpubBytes := getXpub(file, random)
-	userData := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
-	getDoc(file, random, userData, xpubBytes)
-	defer file.Close()
-	for {
-		fmt.Println("Running attest")
-		time.Sleep(3 * time.Second)
-	}
 }
 
 // TESTING:

@@ -1,0 +1,12 @@
+FROM golang:1.17.2-buster
+
+WORKDIR /
+RUN mkdir -p /source
+COPY . ./source
+WORKDIR /source
+RUN CGO_ENABLED=0 GOOS=linux go build -o nsm nsm.go
+
+FROM scratch
+WORKDIR /
+COPY --from=0 /source/nsm ./
+CMD ["/nsm"]
