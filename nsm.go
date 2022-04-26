@@ -76,7 +76,11 @@ func getXpub() ([]byte, error) {
 	}
 	xpub := xprv.Public()
 	fmt.Println("xpub", xpub)
-	return xpub.([]byte), nil
+	xpubByte := xpub.([]byte)
+	fmt.Println("xpubByte", xpubByte)
+
+	//return xpub.([]byte), nil
+	return nil, nil
 }
 
 // attest obtain an attestation document from Nitro Hypervisor (https://github.com/hf/nsm)
