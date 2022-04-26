@@ -62,6 +62,11 @@ func StreamToByte(stream io.Reader) []byte {
 func getXpub() ([]byte, error) {
 	// get sess
 	sess, err := nsm.OpenDefaultSession()
+	defer sess.Close()
+
+	if nil != err {
+		return nil, err
+	}
 	// Generate a keypair with ECC
 	curve := elliptic.P256()
 	xprv, err := ecdsa.GenerateKey(curve, sess)
