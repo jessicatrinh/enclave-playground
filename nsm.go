@@ -54,6 +54,7 @@ func getXpub() ([]byte, error) {
 	newXprv := &ecdsa.PrivateKey{D: convertedXprv}
 	newXprv.PublicKey.X = x
 	newXprv.PublicKey.Y = y
+	newXprv.PublicKey.Curve = curve
 	fmt.Println("newXprv:", newXprv)               // TESTING
 	fmt.Println("xprv==newXprv?", xprv == newXprv) // TESTING
 	return elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y), nil
