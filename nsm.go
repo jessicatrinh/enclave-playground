@@ -43,15 +43,19 @@ func getXpub() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("xprv original:", xprv)     // TESTING
-	fmt.Println("xprv.D original:", xprv.D) // TESTING
+	fmt.Println("xprv original:", xprv) // TESTING
 	xprvBytes := xprv.D.Bytes()
 	fmt.Println("xprvBytes:", xprvBytes) // TESTING
-	convertedXprv := big.NewInt(0)
-	convertedXprv.SetBytes(xprvBytes)
+	convertedXprv := big.NewInt(0).SetBytes(xprvBytes)
 	fmt.Println("convertedXprv:", convertedXprv) // TESTING
+	marshalledXpub := elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y)
+	fmt.Println("marshalled xpub:", marshalledXpub)
+	x, y := elliptic.Unmarshal(curve, marshalledXpub)
 	newXprv := &ecdsa.PrivateKey{D: convertedXprv}
-	fmt.Println("newXprv:", newXprv) // TESTING
+	newXprv.PublicKey.X = x
+	newXprv.PublicKey.Y = y
+	fmt.Println("newXprv:", newXprv)               // TESTING
+	fmt.Println("xprv==newXprv?", xprv == newXprv) // TESTING
 	return elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y), nil
 }
 
