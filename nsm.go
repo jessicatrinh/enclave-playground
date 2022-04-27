@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/jessicatrinh/nsm"
 	"github.com/jessicatrinh/nsm/request"
+	"math/big"
 	"time"
 )
 
@@ -42,19 +43,15 @@ func getXpub() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("xprv original:", xprv) // TESTING
-	gob.Register(&curve)
-	xprvBytes, err := encodeXpriv(xprv)
-	if err != nil {
-		return nil, err
-	}
+	fmt.Println("xprv original:", xprv)     // TESTING
+	fmt.Println("xprv.D original:", xprv.D) // TESTING
+	xprvBytes := xprv.D.Bytes()
 	fmt.Println("xprvBytes:", xprvBytes) // TESTING
-	xprvDecoded, err := decodeXpriv(xprvBytes)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println("xprvDecoded", xprvDecoded)                // TESTING
-	fmt.Println("xprv==xprvDecoded?", xprv == xprvDecoded) // TESTING
+	convertedXprv := big.NewInt(0)
+	convertedXprv.SetBytes(xprvBytes)
+	fmt.Println("convertedXprv:", convertedXprv) // TESTING
+	newXprv := &ecdsa.PrivateKey{D: convertedXprv}
+	fmt.Println("newXprv:", newXprv) // TESTING
 	return elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y), nil
 }
 
