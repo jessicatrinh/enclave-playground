@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
+	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/cloudflare/cfssl/revoke"
 	"github.com/hf/nitrite"
 	"math/big"
 	"os"
@@ -29,12 +31,26 @@ func main() {
 	//fmt.Printf("%v\n", resJSON)
 	xprv := getKeypair()
 	fmt.Println("xprv:", xprv)
-	fmt.Println("Main finished gracefully.")
 }
 
+// checkRevokedCert checks for revoked certificates (revocation checks are NOT performed by nitrite)
+func checkRevokedCert(certs []*x509.Certificate) {
+	for index, cert := range certs {
+		// VerifyCertificate ensures that the certificate passed in hasn't expired and checks the CRL for the server
+		if revoked, ok := revoke.VerifyCertificate(cert); !ok {
+			fmt.Fprintf(os.Stderr, "warning: soft fail checking revocation")
+		} else if revoked {
+			fmt.Printf("certificate %d was revoked", index)
+			os.Exit(1)
+		}
+	}
+}
+
+// verifyAttestation validates the signature and certificate
 func verifyAttestation(attestation []byte) (string, error) {
 	res, err := nitrite.Verify(
 		attestation,
+		// If the options specify `Roots` as `nil`, the `DefaultCARoot` will be used.
 		nitrite.VerifyOptions{
 			CurrentTime: time.Now(),
 		})
@@ -49,6 +65,7 @@ func verifyAttestation(attestation []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	checkRevokedCert(res.Certificates)
 	return resJSON, nil
 }
 
