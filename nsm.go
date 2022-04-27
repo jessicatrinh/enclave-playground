@@ -43,6 +43,7 @@ func getXpub() ([]byte, error) {
 		return nil, err
 	}
 	fmt.Println("xprv original:", xprv) // TESTING
+	gob.Register(&curve)
 	xprvBytes, err := encodeXpriv(xprv)
 	if err != nil {
 		return nil, err
