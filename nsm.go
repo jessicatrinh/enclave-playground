@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"github.com/jessicatrinh/nsm"
 	"github.com/jessicatrinh/nsm/request"
-	"math/big"
 	"time"
 )
 
@@ -35,7 +34,6 @@ func main() {
 		logIfError(err)
 		userData := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} // sample userData
 		fmt.Println("Generating attestation doc")
-		// TODO: Generate limited lifetime nonce
 		doc, err := attest(nonce.value, userData, xpub)
 		logIfError(err)
 		fmt.Printf("doc: %v\n", base64.StdEncoding.EncodeToString(doc))
@@ -85,23 +83,6 @@ func getXpub() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	// GATHER TEST DATA - START (Will remove)
-	fmt.Println("xprv:", xprv)
-	xprvBytes := xprv.D.Bytes()
-	fmt.Println("xprvBytes:", xprvBytes)
-	convertedXprv := big.NewInt(0).SetBytes(xprvBytes)
-	xpubBytes := elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y)
-	x, y := elliptic.Unmarshal(curve, xpubBytes)
-	newXprv := &ecdsa.PrivateKey{
-		PublicKey: ecdsa.PublicKey{
-			Curve: curve,
-			X:     x,
-			Y:     y,
-		},
-		D: convertedXprv,
-	}
-	fmt.Println("newXprv:", newXprv)
-	// GATHER TEST DATA - END
 	return elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y), nil
 }
 
