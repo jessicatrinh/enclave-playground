@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"encoding/base64"
+	"encoding/gob"
 	"errors"
 	"fmt"
 	"github.com/jessicatrinh/nsm"
@@ -40,6 +42,18 @@ func getXpub() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("xprv original:", xprv) // TESTING
+	xprvBytes, err := encodeXpriv(xprv)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("xprvBytes:", xprvBytes) // TESTING
+	xprvDecoded, err := decodeXpriv(xprvBytes)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("xprvDecoded", xprvDecoded)                // TESTING
+	fmt.Println("xprv==xprvDecoded?", xprv == xprvDecoded) // TESTING
 	return elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y), nil
 }
 
@@ -67,8 +81,24 @@ func attest(nonce, userData, publicKey []byte) ([]byte, error) {
 	return res.Attestation.Document, nil
 }
 
+// HELPERS:
+
 func logIfError(e error) {
 	if e != nil {
 		fmt.Printf("error: %v\n", e)
 	}
+}
+
+// encodeXpriv encodes a *PrivateKey as a byte sequence
+func encodeXpriv(xprv *ecdsa.PrivateKey) ([]byte, error) {
+	var buf bytes.Buffer
+	err := gob.NewEncoder(&buf).Encode(xprv)
+	return buf.Bytes(), err
+}
+
+// decodeXpriv decodes a *PrivateKey object that was encoded
+func decodeXpriv(b []byte) (*ecdsa.PrivateKey, error) {
+	xprv := &ecdsa.PrivateKey{}
+	err := gob.NewDecoder(bytes.NewBuffer(b)).Decode(xprv)
+	return xprv, err
 }
