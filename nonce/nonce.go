@@ -11,8 +11,8 @@ var (
 )
 
 type Nonce struct {
-	value      []byte
-	creation   time.Time // time at which nonce was created
+	value []byte
+	//creation   time.Time // time at which nonce was created
 	expiration time.Time // time at which nonce expires
 }
 
@@ -20,7 +20,6 @@ type Nonce struct {
 func createNonce(random *big.Int) *Nonce {
 	return &Nonce{
 		value:      random.Bytes(),
-		creation:   time.Now(),
 		expiration: time.Now().Add(secs),
 	}
 }
