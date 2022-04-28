@@ -1,38 +1,18 @@
-package main
+package attestation
 
 import (
 	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"encoding/base64"
 	"encoding/gob"
 	"errors"
 	"fmt"
 	"github.com/jessicatrinh/nsm"
 	"github.com/jessicatrinh/nsm/request"
-	"nitro/attest/nonce"
-	"time"
 )
 
-func main() {
-	for {
-		nonce, err := nonce.CreateNonce() // temporary
-		logIfError(err)
-		fmt.Println("Generating keypair")
-		xpub, err := getXpub()
-		logIfError(err)
-		userData := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} // sample userData
-		fmt.Println("Generating attestation doc")
-		doc, err := attest(nonce.Value, userData, xpub)
-		logIfError(err)
-		fmt.Printf("doc: %v\n", base64.StdEncoding.EncodeToString(doc))
-
-		time.Sleep(5 * time.Second)
-	}
-}
-
-// getXpub generates a keypair and return its public key as a byte array
-func getXpub() ([]byte, error) {
+// GetXpub generates a keypair and return its public key as a byte array
+func GetXpub() ([]byte, error) {
 	// Read entropy from Nitro Secure Module
 	sess, err := nsm.OpenDefaultSession()
 	defer sess.Close()
@@ -48,8 +28,8 @@ func getXpub() ([]byte, error) {
 	return elliptic.Marshal(curve, xprv.PublicKey.X, xprv.PublicKey.Y), nil
 }
 
-// attest obtain an attestation document from Nitro Hypervisor
-func attest(nonce, userData, publicKey []byte) ([]byte, error) {
+// GetDoc obtains an attestation document from Nitro Hypervisor
+func GetDoc(nonce, userData, publicKey []byte) ([]byte, error) {
 	sess, err := nsm.OpenDefaultSession()
 	defer sess.Close()
 	if nil != err {
@@ -74,7 +54,7 @@ func attest(nonce, userData, publicKey []byte) ([]byte, error) {
 
 // HELPERS:
 
-func logIfError(e error) {
+func LogIfError(e error) {
 	if e != nil {
 		fmt.Printf("error: %v\n", e)
 	}

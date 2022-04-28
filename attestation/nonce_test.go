@@ -1,4 +1,4 @@
-package nonce
+package attestation
 
 import (
 	"github.com/stretchr/testify/require"
@@ -7,7 +7,8 @@ import (
 )
 
 func TestNonce(t *testing.T) {
-	nonce, err := CreateNonce()
+	secs := time.Second * 2
+	nonce, err := CreateNonce(secs)
 	require.NoError(t, err)
 
 	t.Run("unexpired nonce", func(t *testing.T) {
