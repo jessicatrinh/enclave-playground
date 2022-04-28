@@ -1,7 +1,8 @@
-package main
+package nonce
 
 import (
-	"fmt"
+	"crypto/rand"
+	"math"
 	"math/big"
 	"time"
 )
@@ -11,17 +12,20 @@ var (
 )
 
 type Nonce struct {
-	value []byte
-	//creation   time.Time // time at which nonce was created
+	Value      []byte
 	expiration time.Time // time at which nonce expires
 }
 
-// createNonce generates a limited lifetime nonce
-func createNonce(random *big.Int) *Nonce {
-	return &Nonce{
-		value:      random.Bytes(),
-		expiration: time.Now().Add(secs),
+// CreateNonce generates a limited lifetime nonce
+func CreateNonce() (*Nonce, error) {
+	random, err := rand.Int(rand.Reader, big.NewInt(math.MaxInt64))
+	if err != nil {
+		return nil, err
 	}
+	return &Nonce{
+		Value:      random.Bytes(),
+		expiration: time.Now().Add(secs),
+	}, nil
 }
 
 func isExpiredNonce(n *Nonce) bool {
@@ -29,16 +33,4 @@ func isExpiredNonce(n *Nonce) bool {
 		return true
 	}
 	return false
-}
-
-func main() {
-	random := big.NewInt(251364)
-	nonce := createNonce(random)
-	time.Sleep(time.Second * 1)
-	//time.Sleep(secs)
-	if isExpiredNonce(nonce) {
-		fmt.Println("Nonce is expired")
-	} else {
-		fmt.Println("Nonce is valid")
-	}
 }
