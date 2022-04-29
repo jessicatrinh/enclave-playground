@@ -1,10 +1,8 @@
 package attestation
 
 import (
-	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"encoding/gob"
 	"errors"
 	"fmt"
 	"github.com/jessicatrinh/nsm"
@@ -58,18 +56,4 @@ func LogIfError(e error) {
 	if e != nil {
 		fmt.Printf("error: %v\n", e)
 	}
-}
-
-// encodeXpriv encodes a *PrivateKey as a byte sequence
-func encodeXpriv(xprv *ecdsa.PrivateKey) ([]byte, error) {
-	var buf bytes.Buffer
-	err := gob.NewEncoder(&buf).Encode(xprv)
-	return buf.Bytes(), err
-}
-
-// decodeXpriv decodes a *PrivateKey object that was encoded
-func decodeXpriv(b []byte) (*ecdsa.PrivateKey, error) {
-	xprv := &ecdsa.PrivateKey{}
-	err := gob.NewDecoder(bytes.NewBuffer(b)).Decode(xprv)
-	return xprv, err
 }
