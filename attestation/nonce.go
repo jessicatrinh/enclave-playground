@@ -12,7 +12,7 @@ import (
 // expiration is the time at which the nonce expires.
 type Nonce struct {
 	Value      []byte
-	expiration time.Time
+	Expiration time.Time
 }
 
 // CreateNonce generates a limited lifetime nonce.
@@ -25,7 +25,7 @@ func CreateNonce(secs time.Duration) (*Nonce, error) {
 	}
 	return &Nonce{
 		Value:      random.Bytes(),
-		expiration: time.Now().Add(secs),
+		Expiration: time.Now().Add(secs),
 	}, nil
 }
 
@@ -33,7 +33,7 @@ func CreateNonce(secs time.Duration) (*Nonce, error) {
 // Pre: Parameter n is a *Nonce.
 // Post: True is returned if the nonce has expired. False is returned if the nonce has not expired.
 func isExpiredNonce(n *Nonce) bool {
-	if time.Now().After(n.expiration) {
+	if time.Now().After(n.Expiration) {
 		return true
 	}
 	return false
