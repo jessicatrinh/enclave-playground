@@ -19,5 +19,15 @@ func main() {
 	fmt.Println(nonceValEncoded)
 	fmt.Println("nonce.Expiration:", nonce.Expiration)
 	fmt.Println("nonceExpStr", nonce.Expiration.String())
-	attestation.Attest(nonce, userData)
+	fmt.Println("Generating keypair")
+	xpub, xprv, err := attestation.GenerateKeypair()
+	fmt.Println("xprv:", xprv) // for TESTING
+	attestation.LogIfError(err)
+	fmt.Println("Generating attestation doc")
+	doc, err := attestation.RetrieveAttestation(nonce.Value, userData, xpub)
+	attestation.LogIfError(err)
+	fmt.Printf("doc: %v\n", base64.StdEncoding.EncodeToString(doc))
+	for {
+		time.Sleep(5 * time.Second)
+	}
 }
