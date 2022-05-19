@@ -1,3 +1,4 @@
+.PHONY: nsm, console
 nsm:
 	docker build -t nsm -f Dockerfile.nsm .
 	nitro-cli build-enclave --docker-uri nsm:latest --output-file nsm.eif
