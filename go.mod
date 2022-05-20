@@ -6,6 +6,7 @@ require (
 	github.com/cloudflare/cfssl v1.6.1
 	github.com/hf/nitrite v0.0.0-20211104000856-f9e0dcc73703
 	github.com/jessicatrinh/nsm v0.0.0-20220422171304-7934ac0a50f2
+	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0
 )
 
